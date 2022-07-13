@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" id="inpFile" />
+    <button type="button" id="btnUpload">Upload</button>
+
+    <br />
+    <br />
+    <br />
+    <textarea
+      id="resultText"
+      style="width: 300px; height: 150px"
+      placeholder="Your PDF text apper here"
+    ></textarea>
+    <div id="google_translate_element"></div>
+
+    <div style="width: 300px; height: 150px">
+      <p id="resultArea"></p>
+    </div>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: "en" },
+          "google_translate_element"
+        );
+      }
+    </script>
+    <script
+      type="text/javascript"
+      src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    ></script>
+    <script>
+      const btnUpload = document.getElementById("btnUpload");
+      const inpFile = document.getElementById("inpFile");
+      const resultText = document.getElementById("resultText");
+      const resultArea = document.getElementById("resultArea");
+
+      btnUpload.addEventListener("click", () => {
+        const formData = new FormData();
+
+        formData.append("pdfFile", inpFile.files[0]);
+
+        fetch("/extract-text", {
+          method: "post",
+          body: formData,
+        })
+          .then((response) => {
+            return response.text();
+          })
+          .then((extractedText) => {
+            resultText.value = extractedText;
+            // resultArea.value = extractedText;
+          });
+      });
+
+      var x = document.resultText.textContent;
+
+      document.resultArea.write = x;
+      console.log(x);
+    </script>
+  </body>
+</html>
